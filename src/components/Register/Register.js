@@ -13,7 +13,7 @@ class Register extends React.Component {
         this.email = React.createRef();
 
         this.state = {
-            formErrors: {email: '', name: '', level: 'Level not selected'},
+            formErrors: {email: '', name: '', level: ''},
             emailValid: false,
             nameValid: false,
             levelValid: false,
@@ -23,8 +23,8 @@ class Register extends React.Component {
     }
 
     selectLevel = (level) => {
-        this.setState({selectedLevel: level, levelValid: true, formErrors: {level: '', email: this.state.formErrors.email, name: this.state.formErrors.name}});
         this.props.selectLevel(level);
+        this.setState({selectedLevel: level},() => { this.validateField('level', level) });
     }
 
     renderLevels = () => {
@@ -45,8 +45,8 @@ class Register extends React.Component {
         let fieldValidationErrors = this.state.formErrors;
         let emailValid = this.state.emailValid;
         let nameValid = this.state.nameValid;
-        let levelValid = this.state.nameValid;
-    
+        let levelValid = this.state.levelValid;
+
         switch(fieldName) {
             case 'email':
                 emailValid = value.match(/^([\w.%+-]+)@([\w-]+\.)+([\w]{2,})$/i);
@@ -56,14 +56,18 @@ class Register extends React.Component {
                 nameValid = value.length >= 2;
                 fieldValidationErrors.name = nameValid ? '': ' is too short.';
                 break;
+            case 'level':
+                levelValid = value ? true : false;
+                fieldValidationErrors.level = levelValid ? '': ' is too short.';
+                break;
             default:
                 break;
         }
-        this.setState({formErrors: fieldValidationErrors, emailValid: emailValid, nameValid: nameValid}, this.validateForm);
+        this.setState({formErrors: fieldValidationErrors, emailValid: emailValid, nameValid: nameValid, levelValid: levelValid}, this.validateForm);
     }
 
     validateForm() {
-        this.setState({formValid: this.state.emailValid && this.state.nameValid});
+        this.setState({formValid: this.state.emailValid && this.state.nameValid && this.state.levelValid});
     }
     
     errorClass(error) {
@@ -73,11 +77,11 @@ class Register extends React.Component {
     nextStep = (e) => {
         e.preventDefault();
         if(this.state.formValid) {
-            this.props.nextStep({name: this.name.current.value, email: this.email.current.value})
-            this.props.history.push('/record');
+            this.props.nextStep({name: this.name.current.value, email: this.email.current.value});
+            this.props.history.push('/topic');
         } else {
             this.validateForm();
-            this.setState({showErrors: true})
+            this.setState({showErrors: true});
         }
     }
 

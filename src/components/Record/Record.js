@@ -45,7 +45,7 @@ class Record extends React.Component {
                 title: '234',
                 sources: [
                     {
-                        src: process.env.PUBLIC_URL + 'boc-questions-mp3/Work/level-'+ this.props.selectedLevel +'/' + this.props.topics[this.state.step],
+                        src: process.env.PUBLIC_URL + 'boc-questions-mp3/'+ this.props.selectedTopic +'/level-'+ this.props.selectedLevel +'/' + this.props.topics[this.state.step],
                         type: 'audio/mp3'
                     }
                 ]
@@ -102,7 +102,7 @@ class Record extends React.Component {
     }
 
     submit = () => {
-        if(this.state.step <= this.props.topics.length) {
+        if(this.state.step + 1 <= this.props.topics.length) {
             this.setState({saved: true});
             this.exportRecord();
             setTimeout(() => {
@@ -114,8 +114,7 @@ class Record extends React.Component {
             this.time=0;
             clearInterval(this.timer)
         } else {
-            console.log('ERROR')
-            this.props.history.push('/register')
+            this.props.history.push('/finish')
         }
     }
 
@@ -153,7 +152,7 @@ class Record extends React.Component {
 
     getAudioName() {
         var dateString = new Date().toISOString().split(".")[0];
-        var audioName = `${this.props.userInfo.userName}-${this.props.userInfo.userEmail}-work-${this.props.selectedLevel}-q${this.state.step}-${dateString}.wav`;
+        var audioName = `${this.props.userInfo.userName}-${this.props.userInfo.userEmail}-${this.props.selectedTopic}-${this.props.selectedLevel}-q${this.state.step}-${dateString}.wav`;
         
         return audioName;
     }
@@ -165,9 +164,9 @@ class Record extends React.Component {
     render() {
         return (
             <React.Fragment>
-                { this.props.selectedLevel !== 0 ? 
+                { this.props.userInfo.userEmail ? 
                 <React.Fragment>
-                <div className={this.state.isRecording ? 'image__wrapper image__wrapper--recording': 'image__wrapper'} style={{backgroundImage: 'url('+ process.env.PUBLIC_URL + '/img/listen.png)'}}></div>
+                <div className={this.state.isRecording ? 'image__wrapper image__wrapper--recording': 'image__wrapper'} style={{backgroundImage: 'url('+ process.env.PUBLIC_URL + this.props.backgroundImage + ')'}}></div>
 
                 <div style={{opacity: this.state.isRecording ? '0' : '1'}}>
                     <audio id="player" controls='{progress}' preload="auto">Your browser does not support HTML5 Audio!</audio>
@@ -186,7 +185,7 @@ class Record extends React.Component {
                             <div className="text">{this.state.isSaving ? 'Try Again' : this.state.isRecording ? 'Recording...' : ''}</div>
                         </a>
                     </div>
-                    <Progress current={this.state.step} count={this.props.topics ? this.props.topics.length + 1 : 0} percent={this.returnPercent()} lastStep={this.state.step >= this.props.topics.length - 1}/>
+                    <Progress current={this.state.step} count={this.props.topics ? this.props.topics.length : 0} percent={this.returnPercent()} lastStep={this.state.step >= this.props.topics.length - 1}/>
                 </div></React.Fragment>:
 
                 <div className="content__wrapper content__wrapper--register">
@@ -205,10 +204,12 @@ class Record extends React.Component {
 
 const mapStateToProps = store => {
     return {
+        selectedTopic: store.recordReducer.selectedTopic,
         userInfo: store.registerReducer.userInfo,
-        selectedLevel: store.registerReducer.userInfo.selectedLevel ? store.registerReducer.userInfo.selectedLevel : 0,
+        selectedLevel: store.recordReducer.selectedTopic == 0 ? store.registerReducer.userInfo.selectedLevel : 2,
         attemps: store.recordReducer.attemps,
-        topics: store.recordReducer.topics.Work['level-' + (store.registerReducer.userInfo.selectedLevel ? store.registerReducer.userInfo.selectedLevel : 2)]
+        backgroundImage: store.recordReducer.topics[store.recordReducer.selectedTopic ? store.recordReducer.selectedTopic : 0].background,
+        topics: store.recordReducer.topics[store.recordReducer.selectedTopic ? store.recordReducer.selectedTopic : 0].levels['level-' + (store.recordReducer.selectedTopic == 0 ? store.registerReducer.userInfo.selectedLevel : 2)]
     }
 };
 

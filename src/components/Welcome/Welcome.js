@@ -17,10 +17,10 @@ class Welcome extends React.Component {
                 <div className="content__wrapper content__wrapper--main">
                     <h1>Bounjour. Hello.</h1>
                     <h2>We're using AI to perform language evaluations.<br/>And we're excited for you to be our first beta testers.</h2>
-                    <ButtonsWrapper>
+                    <div className="content__wrapper__buttons">
                         <a href="#" className="button button--video"><span>Watch Video</span></a>
                         <a href="#" className="button button--lead" onClick={() => this.toRegister()}>Start Now</a>
-                    </ButtonsWrapper>
+                    </div>
                     <div className="content__wrapper__terms">Read more about why we care about the <a href="https://silverdrip.com/privacy-policy-1">security and privacy</a> of your data.</div>
                 </div>
             </React.Fragment>
