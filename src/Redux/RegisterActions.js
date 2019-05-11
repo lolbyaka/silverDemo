@@ -1,6 +1,4 @@
-export const GENERATE_LEVELS = 'GENERATE_LEVELS';
-export const SELECT_LEVEL = 'SELECT_LEVEL';
-export const NEXT_STEP = 'NEXT_STEP';
+import {GENERATE_LEVELS, SELECT_LEVEL, NEXT_STEP} from './RegisterActionsType';
 
 export const selectLevel = (level) => {
     return {

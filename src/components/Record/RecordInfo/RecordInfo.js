@@ -1,9 +1,7 @@
 import React from 'react';
 import {connect} from 'react-redux';
-import { playTopic } from '../actions/recordActions';
-import Plyr from 'plyr';
-import Progress from './Progress';
-import SiriWave9 from '../waves';
+import SiriWave9 from '../../../lib/waves';
+
 class RecordInfo extends React.Component {
 
     componentDidMount() {
@@ -39,7 +37,9 @@ class RecordInfo extends React.Component {
                 </div>
                 <div className={this.props.saved ?  'record__info record__info--saved' : 'record__info' }>
                     <div id="record_container" className="record__container"></div>
-                    <a href="#" className={this.props.isSaving ? 'rec rec--submit' : 'rec'} onClick={this.props.cancel}>{this.props.isSaving ? 'Submit' : 'Cancel'}</a>
+                    {this.props.isSaving &&
+                        <a href="#" className='rec rec--submit' onClick={this.props.cancel}>Submit</a>
+                    }
                 </div> 
             </React.Fragment>
         )

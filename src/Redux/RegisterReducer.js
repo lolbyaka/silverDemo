@@ -1,12 +1,12 @@
-import { SELECT_LEVEL, GENERATE_LEVELS, NEXT_STEP } from '../actions/registerActions';
+import { SELECT_LEVEL, GENERATE_LEVELS, NEXT_STEP } from './RegisterActionsType';
 
 const initialState = {
-    selectedLevel: undefined,
-    levels: {
-
+    userInfo: {
+        selectedLevel: undefined,
+        userName: undefined,
+        userEmail: undefined
     },
-    userName: undefined,
-    userEmail: undefined
+    levels: {}
 }
 
 export default function registerReducer(state = initialState, action) {
@@ -16,13 +16,20 @@ export default function registerReducer(state = initialState, action) {
                 ...state,
                 levels: state.levels.map((level, i ) => i === action.level ? 
                 {...level, active: true}: {...level, active: false} ),
-                selectedLevel: (action.level + 1) % 2 !== 0 ? action.level + 2 : action.level + 1
+                userInfo: {
+                    userName: state.userInfo.name,
+                    userEmail: state.userInfo.email,
+                    selectedLevel: (action.level + 1) % 2 !== 0 ? action.level + 2 : action.level + 1
+                }
             }
         case NEXT_STEP:
             return {
                 ...state,
-                userName: action.payload.name,
-                userEmail: action.payload.email
+                userInfo: {
+                    userName: action.payload.name,
+                    userEmail: action.payload.email,
+                    selectedLevel: state.userInfo.selectedLevel
+                }
             }
         case GENERATE_LEVELS:
             return {

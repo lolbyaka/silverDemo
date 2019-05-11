@@ -1,17 +1,16 @@
 import React, {useEffect} from 'react';
-import { BrowserRouter as Router, Route} from 'react-router-dom';
-import App from './App';
-import MainScreen from './MainScreen';
-import Register from './Register.js';
-import Record from './Record.js'
-import { connect } from "react-redux"
-import {generateLevels} from '../actions/registerActions'
+import {BrowserRouter as Router, Route} from 'react-router-dom';
+import Welcome from './Welcome/Welcome';
+import Register from './Register/Register';
+import Record from './Record/Record.js'
+import {connect} from "react-redux"
+import {generateLevels} from '../Redux/RegisterActions'
 
 const Root = (props) => {
   useEffect(() => props.initApp(6), []);
   return (
     <Router>
-      <Route path="/" exact component={MainScreen} />
+      <Route path="/" exact component={Welcome} />
       <Route path="/register" component={Register}/>
       <Route path="/record" component={Record}/>
     </Router>

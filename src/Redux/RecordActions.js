@@ -1,5 +1,4 @@
-export const PLAY_TOPIC = 'PLAY_TOPIC';
-export const RESET_ATTEMPS = 'RESET_ATTEMPS';
+import {RESET_ATTEMPS, PLAY_TOPIC} from './RecordActionsType';
 
 export const playTopic = () => {
     return {
