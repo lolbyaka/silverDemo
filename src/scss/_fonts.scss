@@ -1,0 +1,7 @@
+@import "_mixins/font-face";
+
+
+@include font-face("SF", "#{$font-path}/SFUI/SFProText-Bold", 600);
+@include font-face("SF", "#{$font-path}/SFUI/SFProText-Heavy", 700);
+@include font-face("SF", "#{$font-path}/SFUI/SFProText-Medium", 500);
+@include font-face("SF", "#{$font-path}/SFUI/SFProText-Regular");
