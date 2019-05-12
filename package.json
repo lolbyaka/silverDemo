@@ -1,5 +1,5 @@
 {
-  "name": "SilverFr-App",
+  "name": "silverfr_boc",
   "version": "0.1.0",
   "dependencies": {
     "express": "^4.16.4",
@@ -16,8 +16,7 @@
     "redux-thunk": "^2.3.0"
   },
   "scripts": {
-    "start": "node server.js",
-    "start-react": "react-scripts start",
+    "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
