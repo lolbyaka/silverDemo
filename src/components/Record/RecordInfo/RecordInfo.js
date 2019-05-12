@@ -38,7 +38,7 @@ class RecordInfo extends React.Component {
                 <div className={this.props.saved ?  'record__info record__info--saved' : 'record__info' }>
                     <div id="record_container" className="record__container"></div>
                     {this.props.isSaving &&
-                        <a href="#" className='rec rec--submit' onClick={this.props.cancel}>Submit</a>
+                        <a href="#" className='rec rec--submit' onClick={this.props.toggle}>Submit</a>
                     }
                 </div> 
             </React.Fragment>

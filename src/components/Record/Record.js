@@ -7,6 +7,7 @@ import RecordInfo from './RecordInfo/RecordInfo';
 import Recorder from '../../lib/recorder';
 import * as firebase from 'firebase';
 
+const STORAGE_ENV = "test" // TODO - make this read from env vars
 class Record extends React.Component {
     constructor(props) {
         super(props);
@@ -90,17 +91,6 @@ class Record extends React.Component {
         }
     }
 
-    cancelRecord = () => {
-        if(!this.state.isSaving) {
-            this.setState({isRecording: false, isSaving: false, seconds: '00:00'});
-            this.setSourse();
-            this.time=0;
-            clearInterval(this.timer)
-        } else {
-            this.submit();
-        }
-    }
-
     submit = () => {
         if(this.state.step + 1 <= this.props.topics.length) {
             this.setState({saved: true});
@@ -146,7 +136,7 @@ class Record extends React.Component {
 
     exportRecord = () => {
         this.rec.exportWAV(blob => {
-            this.storageRef.child(this.getAudioName()).put(blob);
+            this.storageRef.child(STORAGE_ENV + "/" + this.getAudioName()).put(blob);
         });
     }
 
@@ -175,7 +165,7 @@ class Record extends React.Component {
                 <div className="content__wrapper content__wrapper--records content__wrapper--listen">
                     <div style={{opacity: this.state.isRecording ? '1' : '0'}} className="timer timer--red">{this.state.seconds}</div>
                     { this.state.isRecording ? 
-                    <RecordInfo isSaving={this.state.isSaving} saved={this.state.saved} cancel={() => this.cancelRecord()}/>: ''
+                    <RecordInfo isSaving={this.state.isSaving} saved={this.state.saved} toggle={() => this.toggleRecord()}/>: ''
                     }
                     <div className="record__buttons">
                         <a href="#" className="record__button play" onClick={() => this.playSource()}>
