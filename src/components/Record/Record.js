@@ -7,7 +7,8 @@ import RecordInfo from './RecordInfo/RecordInfo';
 import Recorder from '../../lib/recorder';
 import * as firebase from 'firebase';
 
-const STORAGE_ENV = "test" // TODO - make this read from env vars
+var STORAGE_ENV = process.env.NODE_ENV === "development" ? "test" : "prod";
+
 class Record extends React.Component {
     constructor(props) {
         super(props);
@@ -136,7 +137,8 @@ class Record extends React.Component {
 
     exportRecord = () => {
         this.rec.exportWAV(blob => {
-            this.storageRef.child(STORAGE_ENV + "/" + this.getAudioName()).put(blob);
+            const file_location = STORAGE_ENV + "/" + this.getAudioName();
+            this.storageRef.child(file_location).put(blob);
         });
     }
 
