@@ -5,23 +5,6 @@ import {selectTopic} from '../../Redux/RecordActions'
 import TopicsWrapper from './TopicsWrapper/TopicsWrapper';
 
 class Topics extends React.Component {
-    constructor(props) {
-        super(props);
-
-        this.state = {
-            formErrors: {email: '', name: '', level: 'Level not selected'},
-            emailValid: false,
-            nameValid: false,
-            levelValid: false,
-            formValid: false,
-            showErrors: false
-        }
-    }
-
-    selectLevel = (level) => {
-        this.setState({selectedLevel: level, levelValid: true, formErrors: {level: '', email: this.state.formErrors.email, name: this.state.formErrors.name}});
-        this.props.selectLevel(level);
-    }
 
     nextStep = (e) => {
         e.preventDefault();

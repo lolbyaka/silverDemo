@@ -1,5 +1,4 @@
 import React from 'react';
-import ButtonsWrapper from '../Buttons/ButtonsWrapper';
 
 class Welcome extends React.Component {
 

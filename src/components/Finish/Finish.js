@@ -1,16 +1,15 @@
 import React from 'react';
-import ButtonsWrapper from '../Buttons/ButtonsWrapper';
-
+import {connect} from 'react-redux'
 class Welcome extends React.Component {
 
     toAnotherTopic = () => {
-        this.props.history.push('/register');
+        this.props.history.push('/topic');
     }
 
     render() {
         return (
             <React.Fragment>
-                <div className='image__wrapper' style={{backgroundImage: 'url('+ process.env.PUBLIC_URL + '/img/listen.png)'}}></div>
+                <div className='image__wrapper' style={{backgroundImage: 'url('+ this.props.backgroundImage + ')'}}></div>
                 <div className="content__wrapper content__wrapper--main content__wrapper--thanks">
                     <iframe src="https://player.vimeo.com/video/323553122" width="100%" height="360" allowfullscreen style={{border: 'none'}}></iframe>            
                     <h1>Thank you</h1>
@@ -24,4 +23,15 @@ class Welcome extends React.Component {
     }
 }
 
-export default Welcome;
+const mapStateToProps = store => {
+    return {
+        backgroundImage: store.recordReducer.topics[store.recordReducer.selectedTopic].background,
+    }
+};
+
+const mapDispatchToProps = dispatch => ({
+
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(Welcome);
+

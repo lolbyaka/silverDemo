@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React from 'react';
 import {BrowserRouter as Router, Route} from 'react-router-dom';
 import Welcome from './Welcome/Welcome';
 import Register from './Register/Register';
@@ -8,17 +8,23 @@ import {connect} from "react-redux"
 import {generateLevels} from '../Redux/RegisterActions'
 import Topics from './Topics/Topics';
 
-const Root = (props) => {
-  useEffect(() => props.initApp(6), []);
-  return (
-    <Router>
-      <Route path="/" exact component={Welcome} />
-      <Route path="/register" component={Register}/>
-      <Route path="/topic" component={Topics}/>
-      <Route path="/record" component={Record}/>
-      <Route path="/finish" component={Finish}/>
-    </Router>
-  )
+class Root extends React.Component {
+  componentDidMount() {
+    console.log(process.env.NODE_ENV);
+    this.props.initApp(6);
+  }
+
+  render() {
+    return (
+      <Router>
+        <Route path="/" exact component={Welcome} />
+        <Route path="/register" component={Register}/>
+        <Route path="/topic" component={Topics}/>
+        <Route path="/record" component={Record}/>
+        <Route path="/finish" component={Finish}/>
+      </Router>
+    )
+  }
 }
 
 const mapStateToProps = (state) => ({

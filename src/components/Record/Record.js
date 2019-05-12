@@ -1,6 +1,6 @@
 import React from 'react';
 import {connect} from 'react-redux';
-import { playTopic,resetAttemps } from '../../Redux/RecordActions';
+import { playTopic, resetAttemps, finishTopic } from '../../Redux/RecordActions';
 import Plyr from 'plyr';
 import Progress from './Progress/Progress';
 import RecordInfo from './RecordInfo/RecordInfo';
@@ -25,6 +25,7 @@ class Record extends React.Component {
         this.player = new Plyr(document.getElementById('player'),);
         this.setSource();
         this.initFirebase();
+        console.log(process.env.REACT_APP_TEST_LEVEL)
     }
 
     initFirebase = () => {
@@ -67,7 +68,7 @@ class Record extends React.Component {
     }
 
     convertSeconds = (seconds) => {
-        return Math.floor(seconds / 60) + ":" + (seconds % 60 ? seconds < 10 ? '0' + seconds % 60 : seconds % 60 : '00')
+        return '0' + Math.floor(seconds / 60) + ":" + (seconds % 60 ? seconds < 10 ? '0' + seconds % 60 : seconds % 60 : '00')
     }
 
     startTimer = () => {
@@ -82,8 +83,8 @@ class Record extends React.Component {
     }
 
     toggleRecord = () => {
-        if(!this.player.playing) {
-            if(!this.state.isRecording && !this.state.isSaving) {
+        if(!this.player.playing && !this.state.saved) {
+            if(!this.state.isRecording && !this.state.saved) {
                 this.startRecord();
                 this.setState({isRecording: true});
                 this.startTimer();
@@ -94,20 +95,27 @@ class Record extends React.Component {
     }
 
     submit = () => {
-        if(this.state.step + 1 <= this.props.topics.length) {
-            this.setState({saved: true});
-            this.exportRecord();
-            setTimeout(() => {
-                this.setState({saved: false, isRecording: false, isSaving: false, seconds: '00:00', attemps: 3});
-                this.props.resetAttemps();
-                this.setState({step: this.state.step +1})
-                this.setSource();
-            }, 3000);
-            this.time=0;
-            clearInterval(this.timer)
-        } else {
-            this.props.history.push('/finish')
-        }
+        this.stopRecord();
+        this.setState({saved: true});
+        this.exportRecord();
+        setTimeout(() => {
+            this.setState({
+                saved: false,
+                isRecording: false,
+                isSaving: false,
+                seconds: '0:59',
+                attemps: 3,
+                step: this.state.step +1
+            });
+            this.props.resetAttemps();
+            this.setSource();
+            if(this.state.step == this.props.topics.length) {
+                this.props.finishTopic(this.props.selectedTopic);
+                this.props.history.push('/finish');
+            }
+        }, 3000);
+        this.time=0;
+        clearInterval(this.timer)
     }
 
     toRegister = () => {
@@ -124,7 +132,6 @@ class Record extends React.Component {
             this.getUserMetaStream = stream;
             const streamSource = audioContext.createMediaStreamSource(stream);
             this.rec = new Recorder(streamSource, {numChannels: 1});
-            console.log(this.rec);
             this.rec.record();
         }).catch((error) => {
             console.log(error);
@@ -168,14 +175,14 @@ class Record extends React.Component {
                 <div className="content__wrapper content__wrapper--records content__wrapper--listen">
                     <div style={{opacity: this.state.isRecording ? '1' : '0'}} className={`timer ${this.time <= 10 ? 'timer--red' : ''}`}>{this.state.seconds}</div>
                     { this.state.isRecording ? 
-                        <RecordInfo saved={this.state.saved} isSaving={this.state.isSaving}/> : ''
+                        <RecordInfo saved={this.state.saved}/> : ''
                     }
                     <div className="record__buttons">
-                        <a href="#" className="record__button play" onClick={() => this.playSource()}>
-                            <div className="text">Replays Remaning: {this.props.attemps}</div>
+                        <a href="#" className={`${this.state.saved || this.state.isRecording ? "record__button record__button--inactive" : "record__button"} play` } onClick={() => this.playSource()}>
+                            <div className="text">{this.state.saved || this.state.isRecording ? '' : `Replays Remaning: ${this.props.attemps}`}</div>
                         </a>
-                        <a href="#" className={this.state.isRecording && !this.state.isSaving ? 'record__button rec rec--active' : 'record__button rec'} onClick={() => this.toggleRecord()}>
-                            <div className="text">{this.state.isSaving ? '' : this.state.isRecording ? 'Recording...' : ''}</div>
+                        <a href="#" className={this.state.isRecording && !this.state.saved ? 'record__button rec rec--active' : this.state.saved ? 'record__button record__button--inactive rec' : 'record__button rec'} onClick={() => this.toggleRecord()}>
+                            <div className="text">{this.state.saved ? '' : this.state.isRecording ? 'Recording...' : ''}</div>
                         </a>
                     </div>
                     <Progress current={this.state.step} count={this.props.topics ? this.props.topics.length : 0} percent={this.returnPercent()} lastStep={this.state.step >= this.props.topics.length - 1}/>
@@ -208,6 +215,8 @@ const mapStateToProps = store => {
 
 const mapDispatchToProps = dispatch => ({
     playTopic: () => dispatch(playTopic()),
-    resetAttemps: () => dispatch(resetAttemps())
+    resetAttemps: () => dispatch(resetAttemps()),
+    finishTopic: (topic) => dispatch(finishTopic(topic))
 })
+
 export default connect(mapStateToProps, mapDispatchToProps)(Record);

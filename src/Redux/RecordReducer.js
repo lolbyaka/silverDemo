@@ -1,4 +1,4 @@
-import { PLAY_TOPIC, RESET_ATTEMPS, SELECT_TOPIC } from './RecordActionsType';
+import { PLAY_TOPIC, RESET_ATTEMPS, SELECT_TOPIC, FINISH_TOPIC } from './RecordActionsType';
 
 const initialState = {
     attemps: 3,
@@ -6,6 +6,7 @@ const initialState = {
     topics: {
         0: {
             selected: false,
+            finished: false,
             background: 'work.jpeg',
             name: 'Work',
             duration: '10',
@@ -17,6 +18,7 @@ const initialState = {
         },
         1: {
             selected: false,
+            finished: false,
             background: 'life.jpeg',
             name: 'Life',
             duration: '10',
@@ -33,6 +35,15 @@ export default function recordReducer(state = initialState, action) {
             return {
                 ...state,
                 attemps: state.attemps - 1
+            }
+        case FINISH_TOPIC:
+            return {
+                ...state,
+                topics: Object.keys(state.topics).map((topic) => {
+                    let topicToEdit = state.topics[topic];
+                    topicToEdit.finished = topic == action.payload;
+                    return topicToEdit;
+                })
             }
         case SELECT_TOPIC:
             return {

@@ -14,17 +14,11 @@ class RecordInfo extends React.Component {
         });
     }
 
-    componentDidUpdate(prevProps, nextProps) {
-        if(prevProps.isSaving) {
-            this.waves.stop();
-        }
-    }
-
     render() {
         return (
             <React.Fragment>
                 {this.props.saved ?
-                <div className='next' style={{marginBottom: this.props.isSaving ? '0': '127px' }}>
+                <div className='next' style={{marginBottom: '127px' }}>
                     <span>Good job,</span>
                     <br/>
                     Next One!
