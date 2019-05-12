@@ -16,25 +16,23 @@ class RecordInfo extends React.Component {
 
     componentDidUpdate(prevProps, nextProps) {
         if(prevProps.isSaving) {
-                this.waves.stop();
+            this.waves.stop();
         }
     }
 
-    hideRec = {opacity: 0, visibility: 'hidden', bottom: '-100%', position: 'absolute' }
     render() {
         return (
             <React.Fragment>
-                
-                <div className={this.props.saved ? 'next' : 'next next-hidden'}>
-                    <span>Good job,</span><br/>
-                    Next One !
-                </div>
-                <div className={this.props.saved ?  'record__info record__info--saved' : 'record__info' }>
-                    <div id="record_container" className="record__container" style={{paddingBottom: this.props.isSaving ? '0': '127px' }}></div>
-                    {this.props.isSaving &&
-                        <a href="#" className='rec rec--submit' onClick={this.props.cancel}>Submit</a>
-                    }
-                </div> 
+                {this.props.saved ?
+                <div className='next' style={{marginBottom: this.props.isSaving ? '0': '127px' }}>
+                    <span>Good job,</span>
+                    <br/>
+                    Next One!
+                </div> : 
+                <div className='record__info'>
+                    <div id="record_container" className="record__container"></div>
+                </div>            
+                }
             </React.Fragment>
         )
     }

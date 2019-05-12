@@ -2,9 +2,9 @@ import { SELECT_LEVEL, GENERATE_LEVELS, NEXT_STEP } from './RegisterActionsType'
 
 const initialState = {
     userInfo: {
-        selectedLevel: undefined,
-        userName: undefined,
-        userEmail: undefined
+        selectedLevel: process.env.NODE_ENV === "development" ? parseInt(process.env.REACT_APP_TEST_LEVEL) : undefined,
+        userName: process.env.NODE_ENV === "development" ? process.env.REACT_APP_TEST_USER : undefined,
+        userEmail: process.env.NODE_ENV === "development" ? process.env.REACT_APP_TEST_EMAIL : undefined,
     },
     levels: {}
 }
