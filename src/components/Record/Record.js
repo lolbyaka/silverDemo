@@ -14,7 +14,7 @@ class Record extends React.Component {
         this.state = {
             isRecording: false,
             isSaving: false,
-            seconds: '00:00',
+            seconds: '01:00',
             saved: false,
             step: 0
         }
@@ -69,10 +69,13 @@ class Record extends React.Component {
     }
 
     startTimer = () => {
-        this.time = 0;
+        this.time = 60;
         this.timer = setInterval(() => {
-            this.time = this.time + 1;
+            this.time = this.time - 1;
             this.setState({seconds: this.convertSeconds(this.time)})
+            if (this.time == 0) {
+                this.toggleRecord();
+            }
         }, 1000)
     }
 
@@ -146,7 +149,7 @@ class Record extends React.Component {
 
     exportRecord = () => {
         this.rec.exportWAV(blob => {
-            this.storageRef.child(this.getAudioName()).put(blob);
+           //this.storageRef.child(this.getAudioName()).put(blob);
         });
     }
 
@@ -173,7 +176,7 @@ class Record extends React.Component {
                 </div>
                 
                 <div className="content__wrapper content__wrapper--records content__wrapper--listen">
-                    <div style={{opacity: this.state.isRecording ? '1' : '0'}} className="timer timer--red">{this.state.seconds}</div>
+                    <div style={{opacity: this.state.isRecording ? '1' : '0'}} className={`timer ${this.time <= 10 ? 'timer--red' : ''}`}>{this.state.seconds}</div>
                     { this.state.isRecording ? 
                     <RecordInfo isSaving={this.state.isSaving} saved={this.state.saved} cancel={() => this.cancelRecord()}/>: ''
                     }
@@ -182,7 +185,7 @@ class Record extends React.Component {
                             <div className="text">Replays Remaning: {this.props.attemps}</div>
                         </a>
                         <a href="#" className={this.state.isRecording && !this.state.isSaving ? 'record__button rec rec--active' : 'record__button rec'} onClick={() => this.toggleRecord()}>
-                            <div className="text">{this.state.isSaving ? 'Try Again' : this.state.isRecording ? 'Recording...' : ''}</div>
+                            <div className="text">{this.state.isSaving ? '' : this.state.isRecording ? 'Recording...' : ''}</div>
                         </a>
                     </div>
                     <Progress current={this.state.step} count={this.props.topics ? this.props.topics.length : 0} percent={this.returnPercent()} lastStep={this.state.step >= this.props.topics.length - 1}/>
