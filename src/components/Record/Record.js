@@ -23,7 +23,7 @@ class Record extends React.Component {
     }
     componentDidMount() {
         this.player = new Plyr(document.getElementById('player'),);
-        this.setSourse();
+        this.setSource();
         this.initFirebase();
     }
 
@@ -40,7 +40,7 @@ class Record extends React.Component {
         this.storageRef = fbApp.storage("gs://silverfr-222123.appspot.com").ref();
     }
 
-    setSourse = () => {
+    setSource = () => {
         if(this.props.selectedLevel !== 0 && this.props.topics) {
             this.player.source = {
                 type: 'audio',
@@ -85,9 +85,7 @@ class Record extends React.Component {
                 this.setState({isRecording: true});
                 this.startTimer();
             } else {
-                this.exportRecord();
-                clearInterval(this.timer);
-                this.setState({isSaving: true});
+                this.submit()
             } 
         }
     }
@@ -100,7 +98,7 @@ class Record extends React.Component {
                 this.setState({saved: false, isRecording: false, isSaving: false, seconds: '00:00', attemps: 3});
                 this.props.resetAttemps();
                 this.setState({step: this.state.step +1})
-                this.setSourse();
+                this.setSource();
             }, 3000);
             this.time=0;
             clearInterval(this.timer)
@@ -167,7 +165,7 @@ class Record extends React.Component {
                 <div className="content__wrapper content__wrapper--records content__wrapper--listen">
                     <div style={{opacity: this.state.isRecording ? '1' : '0'}} className="timer timer--red">{this.state.seconds}</div>
                     { this.state.isRecording ? 
-                    <RecordInfo isSaving={this.state.isSaving} saved={this.state.saved} toggle={() => this.toggleRecord()}/>: ''
+                        <RecordInfo saved={this.state.saved}/> : ''
                     }
                     <div className="record__buttons">
                         <a href="#" className="record__button play" onClick={() => this.playSource()}>

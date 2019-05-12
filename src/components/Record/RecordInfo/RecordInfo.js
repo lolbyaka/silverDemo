@@ -18,18 +18,16 @@ class RecordInfo extends React.Component {
     render() {
         return (
             <React.Fragment>
-                
-                <div className={this.props.saved ? 'next' : 'next next-hidden'}>
+                {this.props.saved ?
+                <div className='next'>
                     <span>Good job,</span>
                     <br/>
-                    <span>Next One !</span>
-                </div>
-                <div className={this.props.saved ?  'record__info record__info--saved' : 'record__info' }>
+                    <span>Next One!</span>
+                </div> : 
+                <div className='record__info'>
                     <div id="record_container" className="record__container"></div>
-                    {this.props.isSaving &&
-                        <a href="#" className='rec rec--submit' onClick={this.props.toggle}>Submit</a>
-                    }
-                </div> 
+                </div>            
+                }
             </React.Fragment>
         )
     }
